@@ -1,0 +1,11 @@
+{
+  "name": "Allo ! — Carnet d'appels",
+  "short_name": "Allo !",
+  "description": "Un carnet de contacts visuel pour appeler rapidement.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f6f0",
+  "theme_color": "#125c50",
+  "lang": "fr",
+  "icons": [{ "src": "icons/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

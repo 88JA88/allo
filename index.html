@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#125c50" />
+    <meta name="description" content="Un carnet de contacts visuel pour appeler en un geste." />
+    <link rel="manifest" href="manifest.webmanifest?v=1" />
+    <link rel="apple-touch-icon" href="icons/app-icon.svg" />
+    <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css?v=1" />
+    <title>Allo !</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Carnet d'appels</p>
+        <h1>Allo !</h1>
+      </div>
+      <button class="icon-button" id="settings-button" type="button" aria-label="Ouvrir les réglages">⚙️</button>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="intro-title">
+        <h2 id="intro-title">Qui voulez-vous appeler ?</h2>
+        <p>Appuyez sur une photo pour préparer un appel.</p>
+      </section>
+      <section id="contacts" class="contacts size-medium" aria-label="Vos contacts"></section>
+      <section id="empty-state" class="empty-state" hidden>
+        <div class="empty-icon">☎</div>
+        <h2>Votre carnet est vide</h2>
+        <p>Ajoutez les personnes que vous appelez le plus souvent.</p>
+      </section>
+    </main>
+
+    <button class="add-button" id="add-button" type="button"><span>＋</span> Ajouter un contact</button>
+
+    <dialog id="contact-dialog" class="dialog form-dialog">
+      <form id="contact-form" method="dialog">
+        <div class="dialog-heading">
+          <h2 id="form-title">Nouveau contact</h2>
+          <button class="icon-button" type="button" data-close="contact-dialog" aria-label="Fermer">×</button>
+        </div>
+        <input id="contact-id" type="hidden" />
+        <label class="photo-picker" for="contact-photo">
+          <img id="photo-preview" alt="Aperçu de la photo" hidden />
+          <span id="photo-placeholder">Ajouter une photo<br /><small>ou une icône</small></span>
+        </label>
+        <input id="contact-photo" type="file" accept="image/*" hidden />
+        <label>Prénom ou nom <input id="contact-name" required maxlength="50" autocomplete="name" placeholder="Ex. Mamie" /></label>
+        <label>Numéro de téléphone <input id="contact-phone" required inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" /></label>
+        <div class="form-actions">
+          <button class="secondary" type="button" data-close="contact-dialog">Annuler</button>
+          <button class="primary" type="submit">Enregistrer</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="call-dialog" class="dialog call-dialog">
+      <div class="call-content">
+        <img id="call-photo" alt="" hidden />
+        <div id="call-avatar" class="call-avatar" aria-hidden="true"></div>
+        <p class="eyebrow">Prêt à appeler</p>
+        <h2 id="call-title">J'appelle ?</h2>
+        <p id="call-phone" class="call-phone"></p>
+        <div class="form-actions stacked">
+          <a id="call-link" class="primary call-link" href="#">Appeler</a>
+          <button class="secondary" id="call-cancel" type="button">Pas maintenant</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="settings-dialog" class="dialog settings-dialog">
+      <div class="dialog-heading"><h2>Réglages</h2><button class="icon-button" type="button" data-close="settings-dialog" aria-label="Fermer">×</button></div>
+      <fieldset>
+        <legend>Taille des cadres</legend>
+        <div class="segmented" role="radiogroup" aria-label="Taille des cadres">
+          <button type="button" data-size="small">Petit</button>
+          <button type="button" data-size="medium">Moyen</button>
+          <button type="button" data-size="large">Grand</button>
+        </div>
+      </fieldset>
+      <div class="settings-section">
+        <h3>Sauvegarde</h3>
+        <p>Vos contacts restent sur cet appareil. Exportez-les avant de changer de téléphone.</p>
+        <div class="settings-actions">
+          <button id="export-button" class="secondary" type="button">Exporter la liste</button>
+          <label class="secondary import-label" for="import-file">Importer une liste</label>
+          <input id="import-file" type="file" accept="application/json" hidden />
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="manage-dialog" class="dialog manage-dialog">
+      <div class="dialog-heading"><h2 id="manage-title">Contact</h2><button class="icon-button" type="button" data-close="manage-dialog" aria-label="Fermer">×</button></div>
+      <button id="edit-contact" class="secondary full" type="button">Modifier</button>
+      <button id="delete-contact" class="danger full" type="button">Supprimer ce contact</button>
+    </dialog>
+
+    <div id="update-toast" class="update-toast" hidden><span>Une mise à jour est disponible.</span><button id="update-button" type="button">Actualiser</button></div>
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <script src="app.js?v=1"></script>
+  </body>
+</html>
