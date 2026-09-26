@@ -2,7 +2,6 @@ const DB_NAME = 'allo-contacts'; const STORE = 'contacts';
 const $ = (id) => document.getElementById(id);
 const els = { contacts:$('contacts'), empty:$('empty-state'), form:$('contact-form'), photo:$('contact-photo'), preview:$('photo-preview'), placeholder:$('photo-placeholder'), sizeButtons:[...document.querySelectorAll('[data-size]')] };
 let activeContact = null; let pendingPhoto = null; let db;
-let callInProgress = false; let wasHiddenDuringCall = false; let callStatusTimer;
 
 function openDb() { return new Promise((resolve,reject) => { const request=indexedDB.open(DB_NAME,1); request.onupgradeneeded=()=>request.result.createObjectStore(STORE,{keyPath:'id'}); request.onsuccess=()=>{db=request.result;resolve();}; request.onerror=()=>reject(request.error); }); }
 function getContacts() { return new Promise((resolve,reject)=>{const r=db.transaction(STORE).objectStore(STORE).getAll(); r.onsuccess=()=>resolve(r.result.sort((a,b)=>a.createdAt-b.createdAt)); r.onerror=()=>reject(r.error);}); }
@@ -11,8 +10,7 @@ function remove(id) { return new Promise((resolve,reject)=>{const r=db.transacti
 function initials(name) { return name.trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
 function dialog(id) { $(id).showModal(); }
 function close(id) { $(id).close(); }
-function notice(message) { const el=$('notice'); el.textContent=message; el.classList.add('visible'); setTimeout(()=>el.classList.remove('visible'),2600); }
-function showCallStatus(message, duration = 0) { const el=$('call-status'); clearTimeout(callStatusTimer); el.textContent=message; el.hidden=false; if(duration) callStatusTimer=setTimeout(()=>{el.hidden=true;},duration); }
+function notice(message) { const el=$('notice'); el.textContent=message; el.classList.add('visible'); setTimeout(()=>el.classList.remove('visible'),1800); }
 
 async function render() { const contacts=await getContacts(); els.contacts.replaceChildren(); els.empty.hidden=contacts.length!==0; contacts.forEach(contact=>{ const card=document.createElement('button'); card.className='contact-card'; card.type='button'; card.setAttribute('aria-label',`Appeler ${contact.name}`); if(contact.photo) { const image=document.createElement('img'); image.className='contact-photo'; image.src=contact.photo; image.alt=''; card.append(image); } else { const fallback=document.createElement('div'); fallback.className='contact-fallback'; fallback.textContent=initials(contact.name); fallback.setAttribute('aria-hidden','true'); card.append(fallback); } const label=document.createElement('span'); label.className='contact-label'; label.textContent=contact.name; card.append(label); const menu=document.createElement('button'); menu.className='card-menu'; menu.type='button'; menu.textContent='⋮'; menu.setAttribute('aria-label',`Gérer ${contact.name}`); menu.addEventListener('click',e=>{e.stopPropagation(); activeContact=contact; $('manage-title').textContent=contact.name; dialog('manage-dialog');}); card.append(menu); card.addEventListener('click',()=>showCall(contact)); els.contacts.append(card); }); }
 function showCall(contact) { activeContact=contact; $('call-title').textContent=`J'appelle ${contact.name} ?`; $('call-phone').textContent=contact.phone; $('call-link').href=`tel:${contact.phone.replace(/[^+\d]/g,'')}`; const photo=$('call-photo'), avatar=$('call-avatar'); if(contact.photo) { photo.src=contact.photo; photo.hidden=false; avatar.hidden=true; } else { avatar.textContent=initials(contact.name); avatar.hidden=false; photo.hidden=true; } dialog('call-dialog'); }
@@ -24,8 +22,7 @@ function readFile(file) { return new Promise((resolve,reject)=>{const r=new File
 $('add-button').addEventListener('click',()=>{resetForm();dialog('contact-dialog');});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>close(b.dataset.close)));
 $('call-cancel').addEventListener('click',()=>close('call-dialog'));
-$('call-link').addEventListener('click',()=>{ if(!activeContact)return; callInProgress=true; wasHiddenDuringCall=false; showCallStatus(`J’ouvre le téléphone pour appeler ${activeContact.name}…`); });
-document.addEventListener('visibilitychange',()=>{ if(!callInProgress)return; if(document.hidden){ wasHiddenDuringCall=true; showCallStatus('Allo est en arrière-plan. Le téléphone prend le relais.'); } else if(wasHiddenDuringCall) { showCallStatus('Retour dans Allo.',3000); callInProgress=false; } });
+$('call-link').addEventListener('click',()=>notice('J’ouvre le téléphone…'));
 els.photo.addEventListener('change',async()=>{const file=els.photo.files[0];if(!file)return;pendingPhoto=await readFile(file);els.preview.src=pendingPhoto;els.preview.hidden=false;els.placeholder.hidden=true;});
 els.form.addEventListener('submit',async e=>{e.preventDefault(); const id=$('contact-id').value; await save({id:id||crypto.randomUUID(),name:$('contact-name').value.trim(),phone:$('contact-phone').value.trim(),photo:pendingPhoto,createdAt:id?(activeContact?.createdAt||Date.now()):Date.now()}); close('contact-dialog'); await render(); notice('Contact enregistré.');});
 $('edit-contact').addEventListener('click',()=>edit(activeContact)); $('delete-contact').addEventListener('click',async()=>{if(!activeContact)return; if(confirm(`Supprimer ${activeContact.name} ?`)){await remove(activeContact.id);close('manage-dialog');await render();notice('Contact supprimé.');}});
