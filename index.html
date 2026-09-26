@@ -17,13 +17,21 @@
         <p class="eyebrow"></p>
         <h1>Allo...</h1>
       </div>
-      <button class="icon-button" id="settings-button" hidden type="button" aria-label="Ouvrir les réglages">⚙️</button>
     </header>
 
     <main>
-      <section class="intro" aria-labelledby="intro-title">
-        <h2 id="intro-title"></h2>
-        <p></p>
+      <section class="controls" aria-label="Options de l'application">
+        <div class="segmented" role="radiogroup" aria-label="Taille des cadres">
+          <button type="button" data-size="small">Petit</button>
+          <button type="button" data-size="medium">Moyen</button>
+          <button type="button" data-size="large">Grand</button>
+        </div>
+        <div class="settings-actions">
+          <button id="export-button" class="secondary" type="button">Sauvegarder</button>
+          <label class="secondary import-label" for="import-file">Restaurer</label>
+          <input id="import-file" type="file" accept="application/json" hidden />
+          <button id="update-button" class="secondary" type="button">Actualiser l’application</button>
+        </div>
       </section>
       <section id="contacts" class="contacts size-medium" aria-label="Vos contacts"></section>
       <section id="empty-state" class="empty-state" hidden>
@@ -70,34 +78,12 @@
       </div>
     </dialog>
 
-    <dialog id="settings-dialog" class="dialog settings-dialog">
-      <div class="dialog-heading"><h2></h2><button class="icon-button" type="button" data-close="settings-dialog" aria-label="Fermer">×</button></div>
-      <fieldset>
-        <legend>Taille des cadres</legend>
-        <div class="segmented" role="radiogroup" aria-label="Taille des cadres">
-          <button type="button" data-size="small">Petit</button>
-          <button type="button" data-size="medium">Moyen</button>
-          <button type="button" data-size="large">Grand</button>
-        </div>
-      </fieldset>
-      <div class="settings-section">
-        <h3>Sauvegarde</h3>
-        <p>Vos contacts restent sur cet appareil. Exportez-les avant de changer de téléphone.</p>
-        <div class="settings-actions">
-          <button id="export-button" class="secondary" type="button">Exporter la liste</button>
-          <label class="secondary import-label" for="import-file">Importer une liste</label>
-          <input id="import-file" type="file" accept="application/json" hidden />
-        </div>
-      </div>
-    </dialog>
-
     <dialog id="manage-dialog" class="dialog manage-dialog">
       <div class="dialog-heading"><h2 id="manage-title">Contact</h2><button class="icon-button" type="button" data-close="manage-dialog" aria-label="Fermer">×</button></div>
       <button id="edit-contact" class="secondary full" type="button">Modifier</button>
       <button id="delete-contact" class="danger full" type="button">Supprimer ce contact</button>
     </dialog>
 
-    <div id="update-toast" class="update-toast" hidden><span>Une mise à jour est disponible.</span><button id="update-button" type="button">Actualiser</button></div>
     <div id="notice" class="notice" role="status" aria-live="polite"></div>
     <script src="app.js?v=1"></script>
   </body>
