@@ -22,7 +22,6 @@ function readFile(file) { return new Promise((resolve,reject)=>{const r=new File
 $('add-button').addEventListener('click',()=>{resetForm();dialog('contact-dialog');});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>close(b.dataset.close)));
 $('call-cancel').addEventListener('click',()=>close('call-dialog'));
-$('call-link').addEventListener('click',()=>notice('J’ouvre le téléphone…'));
 els.photo.addEventListener('change',async()=>{const file=els.photo.files[0];if(!file)return;pendingPhoto=await readFile(file);els.preview.src=pendingPhoto;els.preview.hidden=false;els.placeholder.hidden=true;});
 els.form.addEventListener('submit',async e=>{e.preventDefault(); const id=$('contact-id').value; await save({id:id||crypto.randomUUID(),name:$('contact-name').value.trim(),phone:$('contact-phone').value.trim(),photo:pendingPhoto,createdAt:id?(activeContact?.createdAt||Date.now()):Date.now()}); close('contact-dialog'); await render(); notice('Contact enregistré.');});
 $('edit-contact').addEventListener('click',()=>edit(activeContact)); $('delete-contact').addEventListener('click',async()=>{if(!activeContact)return; if(confirm(`Supprimer ${activeContact.name} ?`)){await remove(activeContact.id);close('manage-dialog');await render();notice('Contact supprimé.');}});
