@@ -1,4 +1,4 @@
-const CACHE = 'allo-shell-v3';
+const CACHE = 'allo-shell-v4';
 const ASSETS = ['./','./index.html','./styles.css?v=2','./app.js?v=1','./manifest.webmanifest?v=2','./icons/app-icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))));
 self.addEventListener('activate', event => event.waitUntil(Promise.all([self.clients.claim(), caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))])));
