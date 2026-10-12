@@ -1,4 +1,4 @@
-# Allo !
+# Allo...
 
 PWA autonome : un carnet d'appels visuel, installable sur Android et iPhone.
 

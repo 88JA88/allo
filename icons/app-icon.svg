@@ -1,1 +1,5 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#fff" />
+  <image href="ja-logo.png" x="150" y="55" width="724" height="734" preserveAspectRatio="xMidYMid meet" />
+  <text x="512" y="940" text-anchor="middle" fill="#000" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="700">Allo...</text>
+</svg>
